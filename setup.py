@@ -237,8 +237,8 @@ with chdir(root):
         readme = f.read()
 
 setup(
-    setup_requires=["numpy>=1.15.0"],
-    install_requires=["numpy>=1.15.0"],
+    setup_requires=["numpy>=1.14.6"],
+    install_requires=["numpy>=1.14.6"],
     ext_modules=[
         Extension(
             "blis.cy", [os.path.join("blis", "cy.c")], extra_compile_args=["-std=c99"]
