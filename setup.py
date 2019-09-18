@@ -33,7 +33,6 @@ MOD_NAMES = [
     'blis.py'
 ]
 
-print('BLIS_COMPILER?', os.environ.get('BLIS_COMPILER', 'None'))
 
 def clean(path):
     if os.path.exists(os.path.join(PWD, 'build')):
@@ -103,7 +102,6 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext, build_ext_options)
         compiler = self.get_compiler_name()
         arch = self.get_arch_name()
         objects = self.compile_objects(compiler.split('-')[0], arch, OBJ_DIR)
-        print("Compiler", compiler)
         if sys.platform == 'msvc':
             platform_name = 'windows'
         elif sys.platform == 'darwin':
@@ -144,7 +142,6 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext, build_ext_options)
         elif os.environ.get('TRAVIS_OS_NAME') == "linux":
             return 'gcc-6'
         name = self.compiler.compiler_type
-        print(name)
         if name.startswith('msvc'):
             return 'msvc'
         elif name not in ('gcc', 'clang', 'icc'):
@@ -154,7 +151,6 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext, build_ext_options)
 
     def compile_objects(self, py_compiler, py_arch, obj_dir):
         objects = []
-        print("py_compiler", py_compiler)
         if py_compiler == 'msvc':
             platform_name = 'windows' + '-' + py_arch
         elif sys.platform == 'darwin':
@@ -168,7 +164,6 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext, build_ext_options)
                 spec = json.loads(line)
                 if 'environment' in spec:
                     env = spec['environment']
-                    print(env)
                     continue
                 _, target_name = os.path.split(spec['target'])
                 if py_compiler == 'msvc':
@@ -194,7 +189,6 @@ class ExtensionBuilder(distutils.command.build_ext.build_ext, build_ext_options)
         command.extend(flags)
         command.extend(macros)
         command.extend(include)
-        print(' '.join(command))
         subprocess.check_call(command, cwd=BLIS_DIR)
         return target
 
@@ -233,8 +227,8 @@ with chdir(root):
         readme = f.read()
 
 setup(
-    setup_requires=['numpy>=1.15.0'],
-    install_requires=['numpy>=1.15.0'],
+    setup_requires=['numpy>=1.14.6'],
+    install_requires=['numpy>=1.14.6'],
     ext_modules=[
         Extension('blis.cy', [os.path.join('blis', 'cy.c')], extra_compile_args=['-std=c99']),
         Extension('blis.py', [os.path.join('blis', 'py.c')], extra_compile_args=['-std=c99'])
